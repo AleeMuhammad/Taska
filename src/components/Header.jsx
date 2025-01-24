@@ -84,7 +84,7 @@ const Header = () => {
                       <ul>
                         <li className="flex items-center p-3 font-[Plus Jakarta Sans] font-semibold text-sm rounded-lg space-x-3 bg-[#F5F5F7]">
                         <FontAwesomeIcon className="h-4" icon={faBookOpen} />
-                          <Link  to="/task">Task</Link>
+                          <Link  to="/">Task</Link>
                         </li>
                       </ul>
                     </nav>
