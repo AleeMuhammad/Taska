@@ -75,18 +75,24 @@ const userReducer = (state = userInitialState, action) => {
       return updatedState;
     }
     case SignIn: {
-      if (
-        state.user &&
-        state.user.email === action.payload.email &&
-        state.user.password === action.payload.password
-      ) {
-        toast.success("Sign In Successful!");
-        return { ...state, isAuthenticated: true };
+      const storedUser = JSON.parse(localStorage.getItem("userData"));
+      if (storedUser) {
+        if (
+          storedUser.email === action.payload.email &&
+          storedUser.password === action.payload.password
+        ) {
+          toast.success("Sign In Successful!");
+          return { ...state, isAuthenticated: true };
+        } else {
+          toast.error("Invalid Email or Password");
+          return state;
+        }
       } else {
-        toast.error("Invalid Email or Password");
+        toast.error("User not found. Please sign up.");
         return state;
       }
     }
+    
     case SignOut: {
       localStorage.removeItem("userData");
       toast.success("Signed Out Successfully!");
