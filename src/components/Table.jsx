@@ -20,7 +20,7 @@ const Table = () => {
     { value: "Pending", label: "Pending", color: "text-[#FFB72B]" },
   ];
 
-  const tasks = useSelector((state) => state.tasks.task);
+  const tasks = useSelector((state) => state.user.tasks);
   const dispatch = useDispatch();
 
   const [currentPage, setCurrentPage] = useState(0);

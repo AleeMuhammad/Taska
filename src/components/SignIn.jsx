@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import myimg from "../assets/Illustration.png";
+import icon from "../assets/book-square.png";
+
 import { Link, replace } from "react-router";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -40,31 +42,33 @@ const SignIn = () => {
   const onsubmit = (data) => {
 
 dispatch(signIn(data));
-const userData = JSON.parse(localStorage.getItem("userData"));
-if (userData && userData.email === data.email) {
-  navigate("/", { replace: true });
+const userData = JSON.parse(localStorage.getItem("currentUser"));
+if(userData){
+  if(userData.email === data.email && userData.password === data.password){
+    navigate("/",{replace:true})
+  }
 }
   };
 
-  // const watchAllFields=watch();
 
   return (
     <div className="bg-[#f7f7f9] h-screen flex justify-center items-center relative overflow-hidden">
-  <div className="flex flex-col bg-[#FFFFFF] rounded-xl shadow-[#4C4E6438] shadow-md p-6 z-10 relative">
+  <div className="flex flex-col bg-[#FFFFFF] rounded-xl shadow-[#4C4E6438] shadow-md p-5 z-10 relative">
     <ToastContainer className={"p-4"}/>
-    <div  className="flex items-center justify-center space-x-4">
-    <FontAwesomeIcon className="h-7" icon={faBookOpen} />
+    <div  className="flex items-center justify-center mt-2 space-x-2">
+              <img className="mt-1" src={icon} alt="" />
+      
       <h1 className="text-center font-[Plus Jakarta Sans] font-semibold text-3xl text-[#141522]">
         Taska
       </h1>
     </div>
-    <div className="flex flex-col sm:w-[22rem] space-y-3 mt-3">
+    <div className="flex flex-col sm:w-[21rem] h-[19rem] space-y-6 mt-6">
       <h2 className="font-[Poppins] font-semibold text-[#4C4E64DE] text-2xl">
         Welcome to Taska! 👋🏻
       </h2>
       <form
         onSubmit={handleSubmit(onsubmit)}
-        className="flex flex-col space-y-4"
+        className="flex flex-col space-y-6"
         action=""
       >
         <input
@@ -99,6 +103,7 @@ if (userData && userData.email === data.email) {
         {errors.password && (
           <p className="text-sm text-red-500">{errors.password.message}</p>
         )}
+        
             <button disabled={!isValid} className={`bg-[#666CFF] rounded-xl shadow-md text-white p-2 ${!isValid && 'opacity-50 cursor-not-allowed' }`}>
             SIGN IN
         </button>

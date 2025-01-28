@@ -109,12 +109,12 @@ const TaskCreation = () => {
 
   const onSubmit = (data) => {
     try {
-      const newTask = {
-        ...data,
-        id: uuidv4(),
-      };
-      dispatch(addTask(newTask));
-      navigate("/");
+      // const newTask = {
+      //   ...data,
+      //   id: uuidv4(),
+      // };
+      dispatch(addTask(data));
+      navigate("/",{replace:true});
       console.log("Task Created:", newTask);
     } catch (error) {
       toast.error(error);

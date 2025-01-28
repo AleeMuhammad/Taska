@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import myimg from "../assets/Illustration.png";
+import icon from "../assets/book-square.png";
 import { Link, replace } from "react-router";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -22,7 +21,7 @@ const SignUp = () => {
       .string()
       .required("Full name is required")
       .max(16,"Full name must be less than 16 characters")
-      .min(6, "Full name must be at least 6 characters long")
+      .min(3, "Full name must be at least 3 characters long")
       .matches(/^[A-Za-z\s]+$/, "Full name must only contain letters and spaces"),
     role: yup.string().required("Role is required"),
     email: yup
@@ -67,19 +66,19 @@ const SignUp = () => {
     <>
      <div className="bg-[#f7f7f9] h-screen flex justify-center items-center relative overflow-hidden">
       <div className="flex flex-col bg-[#FFFFFF] rounded-xl shadow-[#4C4E6438] shadow-md p-9 z-10 relative">
-        <div className="flex items-center justify-center space-x-4">
-        <FontAwesomeIcon className="h-7" icon={faBookOpen} />
+        <div className="flex items-center justify-center mt-2 space-x-2">
+        <img className="mt-1" src={icon} alt="" />
         <h1 className="text-center font-[Plus Jakarta Sans] font-semibold text-3xl text-[#141522]">
             Taska
           </h1>
         </div>
-        <div className="flex flex-col sm:w-[22rem] space-y-3 mt-3">
+        <div className="flex flex-col sm:w-[21rem] h-[28rem] space-y-6 mt-6">
           <h2 className="font-[Poppins] font-semibold text-[#4C4E64DE] text-2xl">
             Welcome to Taska! 👋🏻
           </h2>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col space-y-4"
+            className="flex flex-col space-y-6"
             action=""
           >
             <input

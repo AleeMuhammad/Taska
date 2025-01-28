@@ -7,17 +7,19 @@ import { useSelector } from 'react-redux';
 
 const Task = () => {
 
-  const {user}=useSelector((state)=>state.user);
+  const auth=useSelector((state)=>state.user.isAuthenticated);
+  console.log(auth);
+
 
   return (
     <>
       {
-        user ?(
+        auth ?(
           <div>
             <ToastContainer className={"mt-28"}/>
         <div className="task flex justify-center sm:justify-end ">
             <Link to={"/taskcreation"} >
-            <button className='text-white bg-[#546FFF] text-center font[Plus Jakarta Sans] font-semibold text-sm p-3 w-56 rounded-xl'>Create New</button>
+            <button className='text-white bg-[#546FFF] text-center font[Plus Jakarta Sans] font-semibold text-sm p-3 sm:w-56 w-[24rem] rounded-xl'>Create New</button>
             </Link>
         </div>
         <div className='mt-8'>

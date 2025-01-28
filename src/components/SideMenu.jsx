@@ -1,14 +1,16 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import icon from "../assets/book-square.png";
+
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
 const SideMenu = () => {
   return (
     <div className="bg-[#FFFFFF] hidden sm:block text-[#141522] h-full w-64 p-4">
-      <div className="flex justify-center items-center p-4 space-x-4 mt-1">
-    <FontAwesomeIcon className="h-7" icon={faBookOpen}  />
-        <h1 className="text-xl font-[Plus Jakarta Sans] font-semibold">Taska</h1>
+      <div className="flex justify-center items-center p-4 space-x-2 mt-1">
+        <img className="mt-1" src={icon} alt="" />
+        <h1 className="text-3xl font-[Plus Jakarta Sans] font-semibold">Taska</h1>
       </div>
       <div>
         <nav className="mt-4 p-2 ">
