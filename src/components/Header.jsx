@@ -19,7 +19,7 @@ const auth=useSelector((state)=>state.user.isAuthenticated);
       case "/taskcreation":
         return "Create New Task";
       default:
-        return "Task Management";
+        return "Taska";
     }
   };
 
