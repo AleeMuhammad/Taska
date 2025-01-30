@@ -1,22 +1,21 @@
 import React, { useState } from "react";
 import myimg from "../assets/Illustration.png";
 import icon from "../assets/book-square.png";
-
 import { Link, replace } from "react-router";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as yup from "yup";
-import { useDispatch } from "react-redux";
-import { signIn } from "../redux/Store";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../redux/Store";
 
 const SignIn = () => {
   const [showPassword, setshowPassword] = useState(false);
+
+  const users = useSelector((state) => state.users);
   const navigate = useNavigate();
   const dispatch=useDispatch();
   
@@ -39,23 +38,22 @@ const SignIn = () => {
     setshowPassword(!showPassword);
   };
 
-  const onsubmit = (data) => {
-
-dispatch(signIn(data));
-const userData = JSON.parse(localStorage.getItem("currentUser"));
-if(userData){
-  if(userData.email === data.email && userData.password === data.password){
-    navigate("/",{replace:true})
-  }
-}
+  const onSubmit = (data) => {
+    const user = users.find((u) => u.email === data.email && u.password === data.password);
+    if (user) {
+      dispatch(loginUser(user));
+      navigate(user.role==="admin"?"/":"/userdashboard");
+    } else {
+      toast.error("Invalid email or password!");
+    }
   };
 
 
   return (
     <div className="bg-[#f7f7f9] h-screen flex justify-center items-center relative overflow-hidden">
-  <div className="flex flex-col bg-[#FFFFFF] rounded-xl shadow-[#4C4E6438] shadow-md p-5 z-10 relative">
+  <div className="flex flex-col bg-[#FFFFFF]  rounded-xl shadow-[#4C4E6438] shadow-md px-5 py-10 z-10 relative">
     <ToastContainer className={"p-4"}/>
-    <div  className="flex items-center justify-center mt-2 space-x-2">
+    <div  className="flex items-center justify-center  space-x-2">
               <img className="mt-1" src={icon} alt="" />
       
       <h1 className="text-center font-[Plus Jakarta Sans] font-semibold text-3xl text-[#141522]">
@@ -67,7 +65,7 @@ if(userData){
         Welcome to Taska! 👋🏻
       </h2>
       <form
-        onSubmit={handleSubmit(onsubmit)}
+        onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col space-y-6"
         action=""
       >

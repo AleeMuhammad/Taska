@@ -2,10 +2,9 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addTask } from "../redux/Store";
 import { useNavigate } from "react-router";
-import { v4 as uuidv4 } from "uuid";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,6 +16,8 @@ import Select, { components } from "react-select";
 const TaskCreation = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const users = useSelector((state) => state.users);
+  const currentAdmin = JSON.parse(localStorage.getItem("currentUser"));
 
   const statusOptions = [
     {
@@ -76,18 +77,17 @@ const TaskCreation = () => {
     },
   ];
 
-  const assigneeOptions = [
-    { value: "Syed Muqarrab", label: "Syed Muqarrab" },
-    { value: "Saud Haris", label: "Saud Haris" },
-    { value: "Saeed", label: "Saeed" },
-  ];
+  const assigneeOptions = users
+    .filter((user) => user.role === "user")
+    .map((user) => ({
+      value: user.fullName, // Assuming `id` is unique
+      label: user.fullName, // Displaying the name in the dropdown
+    }));
 
+  console.log(assigneeOptions);
   const schema = yup.object().shape({
     title: yup.string().required("Title is required"),
-    dueDate: yup
-      .date()
-      .min(new Date(), "Due date cannot be in the past")
-      .required("Due date is required"),
+    dueDate: yup.date().required("Due date is required"),
     priority: yup.string().required("Priority is required"),
     status: yup.string().required("Status is required"),
     assignee: yup.string().required("Assignee is required"),
@@ -109,12 +109,13 @@ const TaskCreation = () => {
 
   const onSubmit = (data) => {
     try {
-      // const newTask = {
-      //   ...data,
-      //   id: uuidv4(),
-      // };
-      dispatch(addTask(data));
-      navigate("/",{replace:true});
+      dispatch(
+        addTask({
+          ...data,
+          assignedBy: currentAdmin?.fullName || "Unknown",
+        })
+      );
+      navigate("/", { replace: true });
       console.log("Task Created:", newTask);
     } catch (error) {
       toast.error(error);
@@ -258,17 +259,17 @@ const TaskCreation = () => {
                 options={assigneeOptions}
                 value={assigneeOptions.find(
                   (option) => option.value === field.value
-                )} // Find the matching option
+                )}
                 className="mt-4 block w-full rounded-md shadow-sm sm:text-sm"
                 onChange={(selectedOption) =>
                   field.onChange(selectedOption.value)
-                } // Set only the value
+                }
                 components={{
                   MenuList: (props) => (
                     <>
                       <div className="px-4 py-2 mt-2 font-[Poppins] text-base font-medium text-[#333333]">
                         Select an Assignee
-                        <span className="block h-[0.1rem] mt-2 w-full bg-[#DDDDDD]"></span>
+                        <span className="block h-[0.1rem] mt-2 w-full text-black bg-[#DDDDDD]"></span>
                       </div>
                       <components.MenuList {...props} />
                     </>

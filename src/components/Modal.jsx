@@ -4,7 +4,7 @@ import { faCircleXmark , faFlag} from "@fortawesome/free-solid-svg-icons";
 
 const TaskModal = ({ selectedTask, closeModal }) => {
   return (
-    <div className="fixed inset-0 flex p-6 justify-center items-center bg-[#a3a3a3] bg-opacity-50">
+    <div className="fixed inset-0 flex p-6 sm:p-0 justify-center items-center bg-[#a3a3a3] bg-opacity-50">
       <div className="bg-white p-4 sm:p-10 rounded-2xl shadow-lg w-full sm:w-1/2">
         <div className="flex justify-between">
           <h2 className="text-2xl font-semibold">Task Details</h2>
@@ -37,6 +37,10 @@ const TaskModal = ({ selectedTask, closeModal }) => {
           <div className="space-y-4 mt-1 sm:mt-0">
             <h2 className="text-[#656F7D] text-sm font-normal">Status</h2>
               {selectedTask.status==="Active"?(<p className="bg-[#75D653] w-fit px-3 rounded text-white flex justify-self-center font-medium ">Active</p>):selectedTask.status==="Closed"?(<p className="bg-[#F25353] w-fit px-3 rounded text-white font-medium flex justify-self-center ">Closed</p>):(<p className="bg-[#FFB72B] w-fit px-3 rounded text-white flex justify-self-center font-medium ">Pending</p>)} 
+          </div>
+          <div className="space-y-3 mt-1 sm:mt-0">
+            <h2 className="text-[#656F7D] text-sm font-normal">Assigned By</h2>
+            <p>{selectedTask.assignedBy}</p>
           </div>
         </div>
         <div className="border h-44 sm:h-full overflow-auto rounded-xl border-[#D7D7D7] p-4 sm:p-6 mt-10">

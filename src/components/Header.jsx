@@ -4,13 +4,12 @@ import icon from "../assets/book-square.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { signOut } from "../redux/Store";
+import { logoutUser } from "../redux/Store";
 
 const Header = () => {
   const navigate=useNavigate();
   const location = useLocation();
-const auth=useSelector((state)=>state.user.isAuthenticated);
-  console.log(auth);
+const auth=useSelector((state)=>state.currentUser);
 
   const getHeading = () => {
     switch (location.pathname) {
@@ -27,7 +26,7 @@ const auth=useSelector((state)=>state.user.isAuthenticated);
   const dispatch=useDispatch();
 
   const handlelogout=()=>{
-    dispatch(signOut())
+    dispatch(logoutUser())
    navigate("/signin",{replace:true})
     setIsOpen(false);
   }
@@ -57,7 +56,6 @@ const auth=useSelector((state)=>state.user.isAuthenticated);
              </div>
          )
       }
-      {/* <button onClick={handlelogout} className="bg-[#546FFF] text-white px-4 py-2 rounded-xl">Log Out</button> */}
       </div>
     </div>
 
@@ -105,8 +103,6 @@ const auth=useSelector((state)=>state.user.isAuthenticated);
              </div>
          )
       }
-            {/* <button onClick={handlelogout} className="bg-[#546FFF] text-white px-4 py-2 rounded-xl">Log Out</button> */}
-
           </div>
         )}
       </div>

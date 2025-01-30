@@ -7,12 +7,15 @@ import { useNavigate } from "react-router-dom";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useDispatch } from "react-redux";
-import { signUp } from "../redux/Store";
+import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
+import { registerUser } from "../redux/Store";
+import { toast, ToastContainer } from "react-toastify";
 
 const SignUp = () => {
   const [showPassword, setshowPassword] = useState(false);
 
+  const users = useSelector((state) => state.users);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -55,17 +58,21 @@ const SignUp = () => {
   };
 
   const onSubmit = (data) => {
-    console.log(data);
-    dispatch(signUp(data));
-    navigate("/signin", { replace: true });
-  };
+    if (users.some((user) => user.email === data.email)) {
+      toast.error("Email already exists! Please use a different email.");
+      return;
+    }
 
-  // const watchAllFields = watch();
+    dispatch(registerUser(data));
+    navigate("/signin",{replace:true}); 
+    reset(); 
+  }
 
   return (
     <>
      <div className="bg-[#f7f7f9] h-screen flex justify-center items-center relative overflow-hidden">
       <div className="flex flex-col bg-[#FFFFFF] rounded-xl shadow-[#4C4E6438] shadow-md p-9 z-10 relative">
+        <ToastContainer/>
         <div className="flex items-center justify-center mt-2 space-x-2">
         <img className="mt-1" src={icon} alt="" />
         <h1 className="text-center font-[Plus Jakarta Sans] font-semibold text-3xl text-[#141522]">

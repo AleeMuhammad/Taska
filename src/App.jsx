@@ -9,6 +9,7 @@ import TaskCreation from './pages/TaskCreation'
 import Notfound from './pages/Notfound'
 import Reqauth from './components/Reqauth'
 import Unauthorized from './pages/Unauthorized'
+import UserDashboard from './pages/UserDashboard'
 
 
 function App() {
@@ -23,7 +24,8 @@ function App() {
         </Reqauth>
         } />
        <Route path='taskcreation'element={<TaskCreation/>}/>
-       <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path='userdashboard' element={<UserDashboard/>}/>
+       <Route path="unauthorized" element={<Unauthorized />} />
       </Route>
       <Route path='/signin' element={<SignIn/>} />
       <Route path='/signup' element={<SignUp/>} />

@@ -9,12 +9,12 @@ const Unauthorized = () => {
           You do not have permission to view this page.
         </p>
         <Link
-          to="/signup"
+          to="/userdashboard"
          
         >
             <button className="bg-[#546FFF]  text-white  w-[10rem] py-2 rounded-xl">
 
-          Sign Up as Admin
+          Go back
             </button>
         </Link>
       </div>

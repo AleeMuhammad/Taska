@@ -19,6 +19,10 @@ const SideMenu = () => {
             <FontAwesomeIcon className="h-4" icon={faBookOpen} />
               <Link  to="/">Task</Link>
             </li>
+            {/* <li className="flex items-center mt-2 p-3 font-[Plus Jakarta Sans] font-semibold text-sm rounded-lg space-x-3 bg-[#F5F5F7]">
+            <FontAwesomeIcon className="h-4" icon={faBookOpen} />
+              <Link  to="/userdashboard">User</Link>
+            </li> */}
           </ul>
         </nav>
       </div>

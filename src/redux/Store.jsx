@@ -1,162 +1,86 @@
-import { createStore, combineReducers } from "redux";
-import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
+import { createStore } from "redux";
 
-// Action Types for tasks and user
-const AddTask = "task/add";
-const DeleteTask = "task/delete";
-const UpdateTask = "task/update";
-const SignUp = "user/signup";
-const SignIn = "user/signin";
-const SignOut = "user/signout";
-
-// Initial State
 const initialState = {
-  user: JSON.parse(localStorage.getItem("currentUser")) || null,
-  isAuthenticated: !!JSON.parse(localStorage.getItem("currentUser")),
+  users: JSON.parse(localStorage.getItem("users")) || [],
+  currentUser: JSON.parse(localStorage.getItem("currentUser")) || null,
   tasks: JSON.parse(localStorage.getItem("tasks")) || [],
 };
 
-// Reducer
-const userReducer = (state = initialState, action) => {
+const rootReducer = (state = initialState, action) => {
   switch (action.type) {
-    // User Actions
-    case SignUp: {
-      const updatedState = {
-        ...state,
-        user: action.payload,
-        isAuthenticated: true,
-        tasks: [],
-      };
-
-      // Store user-specific data in localStorage
-      localStorage.setItem("currentUser", JSON.stringify(updatedState.user));
-      localStorage.setItem(
-        "usersData",
-        JSON.stringify({
-          [action.payload.email]: updatedState,
-        })
-      );
+    case "REGISTER_USER":
+      const updatedUsers = [...state.users, action.payload];
+      localStorage.setItem("users", JSON.stringify(updatedUsers));
       toast.success("Sign Up Successful!");
-      return updatedState;
-    }
+      return { ...state, users: updatedUsers };
 
-    case SignIn: {
-      const usersData = JSON.parse(localStorage.getItem("usersData")) || {};
-      const storedUser = usersData[action.payload.email];
+    case "LOGIN_USER":
+      localStorage.setItem("currentUser", JSON.stringify(action.payload));
+      toast.success("LogIn Successful!");
+      return { ...state, currentUser: action.payload };
 
-      if (storedUser) {
-        if (
-          storedUser.user.email === action.payload.email &&
-          storedUser.user.password === action.payload.password
-        ) {
-          const updatedState = {
-            ...storedUser,
-            isAuthenticated: true,
-          };
-          localStorage.setItem("currentUser", JSON.stringify(updatedState.user));
-          toast.success("Sign In Successful!");
-          return updatedState;
-        } else {
-          toast.error("Invalid Email or Password");
-        }
-      } else {
-        toast.error("No account found for this email.");
-      }
-      return state;
-    }
-
-    case SignOut: {
+    case "LOGOUT_USER":
       localStorage.removeItem("currentUser");
-      toast.success("Signed Out Successfully!");
-      return { ...state, user: null, isAuthenticated: false, tasks: [] };
-    }
+      return { ...state, currentUser: null };
 
-    // Task Actions
-    case AddTask: {
-      const newTask = { ...action.payload, id: uuidv4() };
-      const updatedTasks = [...state.tasks, newTask];
-      const usersData = JSON.parse(localStorage.getItem("usersData")) || {};
-
-      // Update the current user's task list
-      if (state.user) {
-        usersData[state.user.email] = {
-          ...usersData[state.user.email],
-          tasks: updatedTasks,
-        };
-      }
-
+    case "ADD_TASK":
+      const updatedTasks = [...state.tasks, action.payload];
       localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-      localStorage.setItem("usersData", JSON.stringify(usersData));
-      toast.success("Task Created Successfully");
       return { ...state, tasks: updatedTasks };
-    }
 
-    case DeleteTask: {
-      const updatedTasks = state.tasks.filter((task) => task.id !== action.payload);
-      const usersData = JSON.parse(localStorage.getItem("usersData")) || {};
+      case "UPDATE_TASK":
+        const modifiedTasks = state.tasks.map((task) =>
+          task.id === action.payload.id ? { ...task, ...action.payload.updates } : task
+        );
+        localStorage.setItem("tasks", JSON.stringify(modifiedTasks));
+        return { ...state, tasks: modifiedTasks };
+      
 
-      // Update the current user's task list
-      if (state.user) {
-        usersData[state.user.email] = {
-          ...usersData[state.user.email],
-          tasks: updatedTasks,
-        };
-      }
-
-      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-      localStorage.setItem("usersData", JSON.stringify(usersData));
-      toast.success("Task Deleted Successfully");
-      return { ...state, tasks: updatedTasks };
-    }
-
-    case UpdateTask: {
-      const updatedTasks = state.tasks.map((task) =>
-        task.id === action.payload.id ? { ...task, ...action.payload.updates } : task
-      );
-      const usersData = JSON.parse(localStorage.getItem("usersData")) || {};
-
-      // Update the current user's task list
-      if (state.user) {
-        usersData[state.user.email] = {
-          ...usersData[state.user.email],
-          tasks: updatedTasks,
-        };
-      }
-
-      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-      localStorage.setItem("usersData", JSON.stringify(usersData));
-      toast.success("Task Updated Successfully");
-      return { ...state, tasks: updatedTasks };
-    }
+        case "DELETE_TASK":
+            const remainingTasks = state.tasks.filter((task) => task.id !== action.payload);
+            localStorage.setItem("tasks", JSON.stringify(remainingTasks));
+            return { ...state, tasks: remainingTasks };
 
     default:
       return state;
   }
 };
 
-// Combine Reducers
-const rootReducer = combineReducers({
-  user: userReducer,
+const store = createStore(rootReducer);
+export default store;
+
+// Register a new user
+export const registerUser = (user) => ({
+  type: "REGISTER_USER",
+  payload: { id: uuidv4(), ...user },
 });
 
-// Create Store
-export const store = createStore(rootReducer);
+// Login User
+export const loginUser = (user) => ({
+  type: "LOGIN_USER",
+  payload: user,
+});
 
-// Task Action Creators
-export const addTask = (data) => {
-  return { type: AddTask, payload: data };
-};
+// Logout User
+export const logoutUser = () => ({
+  type: "LOGOUT_USER",
+});
 
-export const deleteTask = (id) => {
-  return { type: DeleteTask, payload: id };
-};
+// Add a new task (Admin assigns task with selected status)
+export const addTask = (task) => ({
+  type: "ADD_TASK",
+  payload: { id: uuidv4(), ...task },
+});
 
-export const updateTask = (id, updates) => {
-  return { type: UpdateTask, payload: { id, updates } };
-};
+// Update Task Status (Admin updates task status)
+export const updateTask = (id, updates) => ({
+  type: "UPDATE_TASK",
+  payload: { id, updates },
+});
 
-// User Action Creators
-export const signUp = (data) => ({ type: SignUp, payload: data });
-export const signIn = (data) => ({ type: SignIn, payload: data });
-export const signOut = () => ({ type: SignOut });
+  export const deleteTask=(id)=>({
+    type:"DELETE_TASK",
+    payload:id
+  });

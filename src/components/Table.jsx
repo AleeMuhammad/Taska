@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { deleteTask, updateTask } from "../redux/Store";
 
 import TaskModal from "./Modal";
+import { toast } from "react-toastify";
 
 const Table = () => {
   const priorityOptions = [
@@ -20,7 +21,7 @@ const Table = () => {
     { value: "Pending", label: "Pending", color: "text-[#FFB72B]" },
   ];
 
-  const tasks = useSelector((state) => state.user.tasks);
+  const tasks = useSelector((state) => state.tasks);
   const dispatch = useDispatch();
 
   const [currentPage, setCurrentPage] = useState(0);
@@ -28,7 +29,6 @@ const Table = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [search, setSearch] = useState("");
 
-  // State to manage dropdown visibility for priority and status
   const [priorityDropdown, setPriorityDropdown] = useState(null);
   const [statusDropdown, setStatusDropdown] = useState(null);
 
@@ -51,6 +51,7 @@ const Table = () => {
 
   const handleDelete = (id) => {
     dispatch(deleteTask(id));
+    toast.success("Task Deleted")
   };
 
   const handlePriorityChange = (taskId, newPriority) => {
@@ -93,7 +94,7 @@ const Table = () => {
 
       {filteredTasks.length === 0 ? (
         <div className="text-center mt-4">
-          No Task to display, Create a task
+          No Task Assigned yet, Create a task
         </div>
       ) : (
         <div>
