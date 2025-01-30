@@ -6,9 +6,16 @@ const Reqauth = ({ children }) => {
   const user = useSelector((state) => state.currentUser);
   const location = useLocation(); 
   
+  if(!user){
+    return <Navigate to="/unauthorized" />
+  }
 
   if (user?.role !== "admin") {
-    return <Navigate to="/unauthorized" />;
+    return <Navigate to="/userdashboard" />;
+  }
+
+  if(user?.role ==="admin"){
+   return <Navigate to="/" />
   }
 
   return children;
