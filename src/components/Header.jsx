@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../redux/Store";
+import { toast, ToastContainer } from "react-toastify";
 
 const Header = () => {
   const navigate=useNavigate();
@@ -27,6 +28,7 @@ const auth=useSelector((state)=>state.currentUser);
 
   const handlelogout=()=>{
     dispatch(logoutUser())
+    toast.success("User Logged Out")
    navigate("/signin",{replace:true})
     setIsOpen(false);
   }
@@ -47,6 +49,7 @@ const auth=useSelector((state)=>state.currentUser);
       {
          auth?( 
           <div>
+            <ToastContainer/>
           <button onClick={handlelogout} className="bg-[#546FFF] text-white px-4   py-2 rounded-xl">Log Out</button>
           </div>
          ) :(
@@ -94,6 +97,7 @@ const auth=useSelector((state)=>state.currentUser);
                   {
          auth?( 
           <div>
+            <ToastContainer/>
           <button onClick={handlelogout} className="bg-[#546FFF] text-white flex justify-self-center px-4 py-2 rounded-xl">Log Out</button>
           </div>
          ) :(

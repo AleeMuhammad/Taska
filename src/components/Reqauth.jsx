@@ -7,7 +7,7 @@ const Reqauth = ({ children }) => {
   const location = useLocation(); 
   
   if(!user){
-    return <Navigate to="/unauthorized" />
+    return <Navigate to="/signin" />
   }
 
   if (user?.role !== "admin") {
@@ -15,10 +15,9 @@ const Reqauth = ({ children }) => {
   }
 
   if(user?.role ==="admin"){
-   return <Navigate to="/" />
-  }
+    return children;  }
 
-  return children;
+  
 };
 
 export default Reqauth;
