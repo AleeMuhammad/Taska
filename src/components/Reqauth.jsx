@@ -11,7 +11,7 @@ const Reqauth = ({ children }) => {
   }
 
   if (user?.role !== "admin") {
-    return <Navigate to="/userdashboard" />;
+    return <Navigate to="/unauthorized" />;
   }
 
   if(user?.role ==="admin"){
